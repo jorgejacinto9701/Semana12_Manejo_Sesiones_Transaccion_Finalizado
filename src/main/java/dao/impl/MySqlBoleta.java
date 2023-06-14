@@ -26,7 +26,7 @@ public class MySqlBoleta implements BoletaDao{
 		
 		int contador = -1;
 		Connection conn = null;
-		PreparedStatement pstm1 = null, pstm2= null,pstm3= null, pstm4 = null;
+		PreparedStatement pstm1 = null, pstm2= null,pstm3= null;
 		
 		try {
 			conn = MySqlDBConexion.getConexion();
@@ -53,10 +53,6 @@ public class MySqlBoleta implements BoletaDao{
 			String sql3 ="insert into producto_has_boleta values(?,?,?,?)";
 			pstm3 =  conn.prepareStatement(sql3);
 			
-			//se inserta el detalle de boleta
-			String sql4 ="update producto set stock = stock - ?  where idProducto =?";
-			pstm4 =  conn.prepareStatement(sql4);
-			
 			for (DetalleBoletaBean aux : lstDetalle) {
 				pstm3.setInt(1, aux.getIdProducto());
 				pstm3.setInt(2, idBoleta);
@@ -64,11 +60,6 @@ public class MySqlBoleta implements BoletaDao{
 				pstm3.setInt(4, aux.getCantidad());
 				pstm3.executeUpdate();
 				log.info(">> pstm3 >> " + pstm3);
-				
-				pstm4.setInt(1, aux.getCantidad());
-				pstm4.setInt(2, aux.getIdProducto());
-				pstm4.executeUpdate();
-				log.info(">> pstm4 >> " + pstm4);
 			}
 			
 			//se ejecuta todos los SQL en la base de datos

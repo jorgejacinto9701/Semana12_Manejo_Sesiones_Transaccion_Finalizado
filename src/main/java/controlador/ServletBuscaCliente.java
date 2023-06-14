@@ -1,8 +1,6 @@
 package controlador;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -10,12 +8,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.google.gson.Gson;
-
-import dao.BoletaDao;
-import entidad.ClienteBean;
-import fabricas.Fabrica;
 
 @WebServlet("/buscaCliente")
 public class ServletBuscaCliente extends HttpServlet {
@@ -29,20 +21,9 @@ public class ServletBuscaCliente extends HttpServlet {
 		
 		String filtro = request.getParameter("filtro");
 		log.info("Filtro -> " + filtro);
-		
-		Fabrica fabrica = Fabrica.getFabrica(Fabrica.MYSQL);
-		BoletaDao dao = fabrica.getBoletaDao();
-		
-		if(filtro == null) filtro ="";
-		List<ClienteBean> lista = dao.consultaCliente(filtro);
-		
-		Gson gson = new Gson();
-		String json = gson.toJson(lista);
 
-		response.setContentType("application/json;charset=UTF-8");
+		
 
-		PrintWriter out = response.getWriter();
-		out.println(json);
 	}
 
 }

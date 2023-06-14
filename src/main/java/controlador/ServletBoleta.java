@@ -15,7 +15,6 @@ import dao.BoletaDao;
 import entidad.BoletaBean;
 import entidad.DetalleBoletaBean;
 import entidad.ProductoBean;
-import entidad.UsuarioBean;
 import fabricas.Fabrica;
 
 @WebServlet("/boleta")
@@ -121,12 +120,8 @@ public class ServletBoleta extends HttpServlet {
 		String cliente = request.getParameter("idCliente");
 		int idCliente = Integer.parseInt(cliente);
 		
-		//Usuario
-		UsuarioBean objUsuario= (UsuarioBean)session.getAttribute("objUsuario");
-		
 		//Creamos la Boleta
 		BoletaBean b = new BoletaBean();
-		b.setIdUsuario(Integer.parseInt(objUsuario.getIdUsuario()));
 		b.setIdCliente(idCliente);
 			
 		//Creamos el detalle
