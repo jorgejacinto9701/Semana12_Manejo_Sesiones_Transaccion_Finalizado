@@ -26,7 +26,7 @@ public class MySqlBoleta implements BoletaDao{
 		
 		int contador = -1;
 		Connection conn = null;
-		PreparedStatement pstm1 = null, pstm2= null,pstm3= null;
+		PreparedStatement pstm1 = null, pstm2= null,pstm3= null, pstm4 = null;
 		
 		try {
 			conn = MySqlDBConexion.getConexion();
@@ -39,10 +39,12 @@ public class MySqlBoleta implements BoletaDao{
 			pstm1.setInt(1, boletaBean.getIdCliente());
 			pstm1.setInt(2, boletaBean.getIdUsuario());
 			pstm1.executeUpdate();
+			log.info(">> pstm1 >> " + pstm1);
 			
 			//se obtiene el idBoleta insertado
 			String sql2 ="select max(idBoleta) from boleta";
 			pstm2 =  conn.prepareStatement(sql2);
+			log.info(">> pstm2 >> " + pstm2);
 			ResultSet rs = pstm2.executeQuery();
 			rs.next();
 			int idBoleta = rs.getInt(1);
@@ -50,12 +52,23 @@ public class MySqlBoleta implements BoletaDao{
 			//se inserta el detalle de boleta
 			String sql3 ="insert into producto_has_boleta values(?,?,?,?)";
 			pstm3 =  conn.prepareStatement(sql3);
+			
+			//se inserta el detalle de boleta
+			String sql4 ="update producto set stock = stock - ?  where idProducto =?";
+			pstm4 =  conn.prepareStatement(sql4);
+			
 			for (DetalleBoletaBean aux : lstDetalle) {
 				pstm3.setInt(1, aux.getIdProducto());
 				pstm3.setInt(2, idBoleta);
 				pstm3.setDouble(3, aux.getPrecio());
 				pstm3.setInt(4, aux.getCantidad());
 				pstm3.executeUpdate();
+				log.info(">> pstm3 >> " + pstm3);
+				
+				pstm4.setInt(1, aux.getCantidad());
+				pstm4.setInt(2, aux.getIdProducto());
+				pstm4.executeUpdate();
+				log.info(">> pstm4 >> " + pstm4);
 			}
 			
 			//se ejecuta todos los SQL en la base de datos
