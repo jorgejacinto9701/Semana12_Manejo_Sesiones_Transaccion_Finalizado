@@ -289,11 +289,11 @@
 		$.getJSON("buscaProducto",{"filtro":var_producto}, function (data){
 				$.each(data, function(index, item){
 					$('#id_table_producto').append("<tr>"+
-							"<td>" +item.var_id + "</td>" +
-							"<td>" +item.var_nombre + "</td>" +
-							"<td>" +item.var_precio + "</td>" +
-							"<td>" +item.var_stock + "</td>" +
-							"<td><button type='button' class='btn btn-default' aria-label='Left Align' onclick=\"f_seleccione_producto('"+ item.var_id+"','"+ item.var_nombre+"','"+ item.var_precio+"','"+ item.var_stock+"');\" ><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button></td>"+
+							"<td>" +item.codigo + "</td>" +
+							"<td>" +item.nombre + "</td>" +
+							"<td>" +item.precio + "</td>" +
+							"<td>" +item.stock + "</td>" +
+							"<td><button type='button' class='btn btn-default' aria-label='Left Align' onclick=\"f_seleccione_producto('"+ item.codigo+"','"+ item.nombre+"','"+ item.precio+"','"+ item.stock+"');\" ><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button></td>"+
 							+"</tr>");
 				});
 			});
