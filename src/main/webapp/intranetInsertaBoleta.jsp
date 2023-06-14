@@ -21,9 +21,7 @@
 </head>
 <body>
 <jsp:include page="intranetCabecera.jsp" />
-<div class="container">&nbsp;<br>&nbsp;<br>&nbsp;<br>
-<h1>Inserta Producto</h1>
-</div>
+<div class="container">&nbsp;<br>&nbsp;<br>&nbsp;<br></div>
 
 <div class="container">
 	<h3>BOLETA - JORGE JACINTO</h3>	
@@ -269,10 +267,10 @@
 		$.getJSON("buscaCliente",{"filtro":var_cliente}, function (data){
 				$.each(data, function(index, item){
 					$('#id_table_cliente').append("<tr>"+
-							"<td>" +item.var_id + "</td>" +
-							"<td>" +item.var_nombre + "</td>" +
-							"<td>" +item.var_apellido + "</td>" +
-							"<td><button type='button' class='btn btn-default' aria-label='Left Align' onclick=\"f_seleccione_cliente('"+ item.var_id+"','"+ item.var_nombre+"','"+ item.var_apellido+"');\" ><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button></td>"+
+							"<td>" +item.idCliente + "</td>" +
+							"<td>" +item.nombre + "</td>" +
+							"<td>" +item.apellido + "</td>" +
+							"<td><button type='button' class='btn btn-default' aria-label='Left Align' onclick=\"f_seleccione_cliente('"+ item.idCliente+"','"+ item.nombre+"','"+ item.apellido +"');\" ><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button></td>"+
 							+"</tr>");
 				});
 			});

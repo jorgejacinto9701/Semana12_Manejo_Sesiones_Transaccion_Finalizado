@@ -35,28 +35,9 @@ public class ServletBuscaProducto extends HttpServlet {
 		if(filtro == null) filtro ="";
 		List<ProductoBean> data = dao.consultaXNombre(filtro);
 
-		/*JsonArrayBuilder array = Json.createArrayBuilder();
-		JsonObject obj = null;
-		
-		for (ProductoBean x : data) {
-			obj = Json.createObjectBuilder().
-					add("var_id", x.getCodigo()).
-					add("var_nombre", x.getNombre()).
-					add("var_precio", x.getPrecio()).
-					add("var_stock", x.getStock()).build();
-			array.add(obj);
-		}
-		
-		//Se imprime el resultado
-		log.info(array.build());
 		
 		
-		//Notificamos el tipo de archivo
-		response.setContentType("application/json;charset=UTF-8");
-		
-		//Se genera el archivo JSON y se envia
-		PrintWriter out =response.getWriter();
-		out.println(array.build());*/
+	
 	}
 
 }
