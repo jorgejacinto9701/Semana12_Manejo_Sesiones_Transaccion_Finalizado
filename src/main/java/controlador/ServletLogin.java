@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dao.UsuarioDAO;
-import entidad.EnlaceBean;
-import entidad.UsuarioBean;
+import entidad.Enlace;
+import entidad.Usuario;
 import fabricas.Fabrica;
 
 
@@ -28,7 +28,7 @@ public class ServletLogin extends HttpServlet {
 		String user = request.getParameter("loginuser");
 		String clave = request.getParameter("loginpassword");
 
-		UsuarioBean bean = new UsuarioBean();
+		Usuario bean = new Usuario();
 		bean.setLogin(user);
 		bean.setPassword(clave);
 		
@@ -37,7 +37,7 @@ public class ServletLogin extends HttpServlet {
 		
 		try {
 				
-			UsuarioBean usuario = dao.login(bean);
+			Usuario usuario = dao.login(bean);
 			//Cuando el usuario no existe
 			if(usuario == null){
 				String mensaje ="El usuario no existe";
@@ -57,7 +57,7 @@ public class ServletLogin extends HttpServlet {
 				session.setAttribute("objUsuario", usuario);
 				
 				//Se obtiene los men�s del usuario logeado y se guarda en la memoria sesi�n
-				List<EnlaceBean> menus = dao.traerEnlacesDeUsuario(usuario.getIdUsuario());
+				List<Enlace> menus = dao.traerEnlacesDeUsuario(usuario.getIdUsuario());
 				session.setAttribute("objMenus", menus);
 				
 				//Cuando el usuario existe

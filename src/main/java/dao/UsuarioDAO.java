@@ -2,8 +2,8 @@ package dao;
 
 import java.util.List;
 
-import entidad.EnlaceBean;
-import entidad.UsuarioBean;
+import entidad.Enlace;
+import entidad.Usuario;
 
 
 
@@ -11,8 +11,8 @@ public interface UsuarioDAO {
 	
 	
 
-	public UsuarioBean  login(UsuarioBean bean) throws Exception;
-	public abstract List<EnlaceBean> traerEnlacesDeUsuario(String idUsuario) throws Exception;
+	public Usuario  login(Usuario bean) throws Exception;
+	public abstract List<Enlace> traerEnlacesDeUsuario(String idUsuario) throws Exception;
 	
 	
 	

@@ -1,8 +1,8 @@
 package entidad;
 
-public class ProductoBean {
+public class Producto {
 
-	private int codigo, idCategoria;
+	private int idProducto, idCategoria;
 	private String nombre, marca;
 	private int cantidad;
 	private double precio;
@@ -30,12 +30,14 @@ public class ProductoBean {
 	public void setMarca(String marca) {
 		this.marca = marca;
 	}
-	public int getCodigo() {
-		return codigo;
+	public int getIdProducto() {
+		return idProducto;
 	}
-	public void setCodigo(int codigo) {
-		this.codigo = codigo;
+
+	public void setIdProducto(int idProducto) {
+		this.idProducto = idProducto;
 	}
+
 	public String getNombre() {
 		return nombre;
 	}

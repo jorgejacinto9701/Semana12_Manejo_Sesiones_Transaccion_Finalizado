@@ -7,14 +7,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <script type="text/javascript" src="js/jquery.min.js"></script>
-<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="js/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/bootstrapValidator.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="css/dataTables.bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrapValidator.css" />
 
-<link rel="stylesheet" href="css/bootstrap.css"/>
+<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/dataTables.bootstrap.min.js"></script>
 <link rel="stylesheet" href="css/dataTables.bootstrap.min.css"/>
-<link rel="stylesheet" href="css/bootstrapValidator.css"/>
 
 
 <title>Sistemas - Jorge Jacinto Gutarra</title>
@@ -122,7 +124,7 @@
 												<c:set var="varSubTotal" value="${varSubTotal + x.subtotal}" />               
 											
 												<tr>
-													<td>${x.codigo}</td>
+													<td>${x.idProducto}</td>
 													<td>${x.nombre}</td>
 													<td>${x.precio}</td>
 													<td>${x.cantidad}</td>
@@ -130,7 +132,7 @@
 													<td>
 														<button type='button' class='btn btn-default' 
 																aria-label='Left Align' 
-																onclick="f_elimina_seleccion('${x.codigo}');" >
+																onclick="f_elimina_seleccion('${x.idProducto}');" >
 															<span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
 														</button>
 													</td>
@@ -267,7 +269,12 @@
 		//Se añade los clientes a la tabla
 		$.getJSON("buscaCliente",{"filtro":var_cliente}, function (data){
 				$.each(data, function(index, item){
-					
+					$('#id_table_cliente').append("<tr>"+
+							"<td>" +item.idCliente + "</td>" +
+							"<td>" +item.nombre + "</td>" +
+							"<td>" +item.apellido + "</td>" +
+							"<td><button type='button' class='btn btn-default' aria-label='Left Align' onclick=\"f_seleccione_cliente('"+ item.idCliente+"','"+ item.nombre+"','"+ item.apellido +"');\" ><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button></td>"+
+							+"</tr>");
 				});
 			});
 		
@@ -285,7 +292,13 @@
 		//Se añade los clientes a la tabla
 		$.getJSON("buscaProducto",{"filtro":var_producto}, function (data){
 				$.each(data, function(index, item){
-					
+					$('#id_table_producto').append("<tr>"+
+							"<td>" +item.idProducto + "</td>" +
+							"<td>" +item.nombre + "</td>" +
+							"<td>" +item.precio + "</td>" +
+							"<td>" +item.stock + "</td>" +
+							"<td><button type='button' class='btn btn-default' aria-label='Left Align' onclick=\"f_seleccione_producto('"+ item.idProducto+"','"+ item.nombre+"','"+ item.precio+"','"+ item.stock+"');\" ><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button></td>"+
+							+"</tr>");
 				});
 			});
 		

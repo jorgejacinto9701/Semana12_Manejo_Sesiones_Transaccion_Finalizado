@@ -1,6 +1,6 @@
 package entidad;
 
-public class DetalleBoletaBean {
+public class DetalleBoleta {
 	private int idBoleta, idProducto, cantidad;
 	private double precio;
 	

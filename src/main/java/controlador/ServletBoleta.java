@@ -12,9 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dao.BoletaDao;
-import entidad.BoletaBean;
-import entidad.DetalleBoletaBean;
-import entidad.ProductoBean;
+import entidad.Boleta;
+import entidad.DetalleBoleta;
+import entidad.Producto;
+import entidad.Usuario;
 import fabricas.Fabrica;
 
 @WebServlet("/boleta")
@@ -35,7 +36,7 @@ public class ServletBoleta extends HttpServlet {
 
 	@SuppressWarnings("unchecked")
 	protected void agregar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		log.info("En agregar selecci�n");
+		log.info("En agregar seleccion");
 		
 		String idProducto = request.getParameter("idProducto");
 		String nombre = request.getParameter("nombreProducto");
@@ -47,19 +48,19 @@ public class ServletBoleta extends HttpServlet {
 		int cant = Integer.parseInt(cantidad);
 		double pre = Double.parseDouble(precio);
 				
-		ArrayList<ProductoBean> boleta  ;
+		ArrayList<Producto> boleta  ;
 		
 		//Se verifica si existe en sesion
 		HttpSession session = request.getSession();
 		if(session.getAttribute("dataDeGrilla") == null){
-			boleta = new ArrayList<ProductoBean>();
+			boleta = new ArrayList<Producto>();
 		}else{
-			boleta = (ArrayList<ProductoBean>)session.getAttribute("dataDeGrilla");
+			boleta = (ArrayList<Producto>)session.getAttribute("dataDeGrilla");
 		}
 		
 		//Se crear el objeto
-		ProductoBean p = new ProductoBean();
-		p.setCodigo(idProd);
+		Producto p = new Producto();
+		p.setIdProducto(idProd);
 		p.setNombre(nombre);
 		p.setCantidad(cant);
 		p.setPrecio(pre);
@@ -67,7 +68,7 @@ public class ServletBoleta extends HttpServlet {
 		boolean noExiste = true;
 		//se verifica los repetidos
 		for (int i = 0; i < boleta.size(); i++) {
-			if(boleta.get(i).getCodigo() == idProd){
+			if(boleta.get(i).getIdProducto() == idProd){
 				boleta.set(i, p);
 				noExiste = false;
 				break;
@@ -86,18 +87,18 @@ public class ServletBoleta extends HttpServlet {
 	
 	@SuppressWarnings("unchecked")
 	protected void eliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		log.info("En eliminar selecci�n");
+		log.info("En eliminar seleccion");
 		
 		
 		String id = request.getParameter("id");
 		
 		HttpSession session = request.getSession();
 		
-		ArrayList<ProductoBean> boleta = (ArrayList<ProductoBean>)session.getAttribute("dataDeGrilla");
+		ArrayList<Producto> boleta = (ArrayList<Producto>)session.getAttribute("dataDeGrilla");
 
 		//Se elimina
-		for (ProductoBean p : boleta) {
-			if(p.getCodigo() == Integer.parseInt(id)){
+		for (Producto p : boleta) {
+			if(p.getIdProducto() == Integer.parseInt(id)){
 				boleta.remove(p);
 				break;
 			}
@@ -114,22 +115,27 @@ public class ServletBoleta extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		//Boleta que esta en sesion
-		ArrayList<ProductoBean> boleta = (ArrayList<ProductoBean>)session.getAttribute("dataDeGrilla");
+		ArrayList<Producto> boleta = (ArrayList<Producto>)session.getAttribute("dataDeGrilla");
 		
 		//Cliente
 		String cliente = request.getParameter("idCliente");
 		int idCliente = Integer.parseInt(cliente);
 		
+		//Usuario
+		Usuario objUsuario = (Usuario) session.getAttribute("objUsuario");
+		String idUsuario = objUsuario.getIdUsuario();
+		
 		//Creamos la Boleta
-		BoletaBean b = new BoletaBean();
+		Boleta b = new Boleta();
 		b.setIdCliente(idCliente);
-			
+		b.setIdUsuario(Integer.parseInt(idUsuario));
+		
 		//Creamos el detalle
-		ArrayList<DetalleBoletaBean> detalles = new ArrayList<DetalleBoletaBean>();
-		for (ProductoBean x : boleta) {
-			DetalleBoletaBean det = new DetalleBoletaBean();
+		ArrayList<DetalleBoleta> detalles = new ArrayList<DetalleBoleta>();
+		for (Producto x : boleta) {
+			DetalleBoleta det = new DetalleBoleta();
 			det.setCantidad(x.getCantidad());
-			det.setIdProducto(x.getCodigo());
+			det.setIdProducto(x.getIdProducto());
 			det.setPrecio(x.getPrecio());
 			detalles.add(det);
 		}

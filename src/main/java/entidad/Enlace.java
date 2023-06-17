@@ -1,6 +1,6 @@
 package entidad;
 
-public class EnlaceBean {
+public class Enlace {
 	
 	private String idEnlace, descripcion, ruta;
 

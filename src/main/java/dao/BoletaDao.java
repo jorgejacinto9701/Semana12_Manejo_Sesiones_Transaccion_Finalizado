@@ -3,14 +3,14 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import entidad.BoletaBean;
-import entidad.ClienteBean;
-import entidad.DetalleBoletaBean;
-import entidad.ProductoBean;
+import entidad.Boleta;
+import entidad.Cliente;
+import entidad.DetalleBoleta;
+import entidad.Producto;
 
 public interface BoletaDao {
 	
-	public int inserta(BoletaBean boletaBean, List<DetalleBoletaBean> lstDetalle);
-	public ArrayList<ClienteBean> consultaCliente(String filtro);
-	public ArrayList<ProductoBean> consultaXNombre(String filtro);
+	public int inserta(Boleta boletaBean, List<DetalleBoleta> lstDetalle);
+	public ArrayList<Cliente> consultaCliente(String filtro);
+	public ArrayList<Producto> consultaXNombre(String filtro);
 }

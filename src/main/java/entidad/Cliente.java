@@ -2,7 +2,7 @@ package entidad;
 
 import java.sql.Date;
 
-public class ClienteBean {
+public class Cliente {
 
 	private int idCliente, edad;
 	private String nombre, apellido;

@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import dao.BoletaDao;
-import entidad.BoletaBean;
-import entidad.ClienteBean;
-import entidad.DetalleBoletaBean;
-import entidad.ProductoBean;
+import entidad.Boleta;
+import entidad.Cliente;
+import entidad.DetalleBoleta;
+import entidad.Producto;
 import util.MySqlDBConexion;
 
 public class MySqlBoleta implements BoletaDao{
@@ -20,17 +20,17 @@ public class MySqlBoleta implements BoletaDao{
 	
 	private static Logger log = Logger.getLogger(MySqlBoleta.class.getName());
 	
-	public int inserta(BoletaBean boletaBean, List<DetalleBoletaBean> lstDetalle){
+	public int inserta(Boleta boletaBean, List<DetalleBoleta> lstDetalle){
 		log.info("---> En MySqlBoleta-> inserta");
 		
 		
 		int contador = -1;
 		Connection conn = null;
-		PreparedStatement pstm1 = null, pstm2= null,pstm3= null;
+		PreparedStatement pstm1 = null, pstm2= null,pstm3= null, pstm4 = null;
 		
 		try {
 			conn = MySqlDBConexion.getConexion();
-			//Se anula el auto env�o
+			//Se anula el auto envio
 			conn.setAutoCommit(false);
 			
 			//se crea el sql de la cabecera
@@ -50,10 +50,19 @@ public class MySqlBoleta implements BoletaDao{
 			int idBoleta = rs.getInt(1);
 			
 			//se inserta el detalle de boleta
-			String sql3 ="insert into producto_has_boleta values(?,?,?,?)";
+			String sql3 ="insert into boleta_has_producto values(?,?,?,?)";
 			pstm3 =  conn.prepareStatement(sql3);
 			
-			for (DetalleBoletaBean aux : lstDetalle) {
+			//Actualiza el stock
+			String sql4 ="update producto set stock = stock - ? where idproducto = ?";
+			pstm4 =  conn.prepareStatement(sql4);
+			
+			for (DetalleBoleta aux : lstDetalle) {
+				pstm4.setInt(1, aux.getCantidad());
+				pstm4.setInt(2, aux.getIdProducto());
+				pstm4.executeUpdate();
+				log.info(">> pstm4 >> " + pstm4);
+				
 				pstm3.setInt(1, aux.getIdProducto());
 				pstm3.setInt(2, idBoleta);
 				pstm3.setDouble(3, aux.getPrecio());
@@ -85,11 +94,11 @@ public class MySqlBoleta implements BoletaDao{
 	}
 
 	@Override
-	public ArrayList<ClienteBean> consultaCliente(String filtro) {
+	public ArrayList<Cliente> consultaCliente(String filtro) {
 		log.info("---> En MySqlBoleta-> consultaCliente ->" + filtro);
 		
-		ArrayList<ClienteBean> data = new ArrayList<ClienteBean>();
-		ClienteBean bean = null;
+		ArrayList<Cliente> data = new ArrayList<Cliente>();
+		Cliente bean = null;
 		Connection conn = null;
 		PreparedStatement pstm = null;
 		try {
@@ -105,7 +114,7 @@ public class MySqlBoleta implements BoletaDao{
 			ResultSet rs = pstm.executeQuery();
 			
 			while(rs.next()){
-				bean = new ClienteBean();
+				bean = new Cliente();
 				bean.setIdCliente(rs.getInt("idcliente"));
 				bean.setNombre(rs.getString("nombre"));
 				bean.setApellido(rs.getString("apellido"));
@@ -126,11 +135,11 @@ public class MySqlBoleta implements BoletaDao{
 	}
 
 	@Override
-	public ArrayList<ProductoBean> consultaXNombre(String filtro) {
+	public ArrayList<Producto> consultaXNombre(String filtro) {
 		log.info("---> En MySqlBoleta-> consultaXNombre ->" + filtro);
 		
-		ArrayList<ProductoBean> data = new ArrayList<ProductoBean>();
-		ProductoBean bean = null;
+		ArrayList<Producto> data = new ArrayList<Producto>();
+		Producto bean = null;
 		Connection conn = null;
 		PreparedStatement pstm = null;
 		try {
@@ -143,8 +152,8 @@ public class MySqlBoleta implements BoletaDao{
 			ResultSet rs = pstm.executeQuery();
 			
 			while(rs.next()){
-				bean = new ProductoBean();
-				bean.setCodigo(rs.getInt("idproducto"));
+				bean = new Producto();
+				bean.setIdProducto(rs.getInt("idproducto"));
 				bean.setNombre(rs.getString("nombre"));
 				bean.setMarca(rs.getString("marca"));
 				bean.setPrecio(rs.getDouble("precio"));

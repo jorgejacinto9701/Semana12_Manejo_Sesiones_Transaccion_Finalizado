@@ -2,7 +2,7 @@ package entidad;
 
 import java.sql.Date;
 
-public class BoletaBean {
+public class Boleta {
 	private int idBoleta,idUsuario, idCliente;
 	private Date fecha;
 	

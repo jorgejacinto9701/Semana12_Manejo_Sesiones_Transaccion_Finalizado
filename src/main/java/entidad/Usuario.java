@@ -1,6 +1,6 @@
 package entidad;
 
-public class UsuarioBean {
+public class Usuario {
 
 	private String idUsuario, nombres, apellidos, login, password, correo,dni;
 	

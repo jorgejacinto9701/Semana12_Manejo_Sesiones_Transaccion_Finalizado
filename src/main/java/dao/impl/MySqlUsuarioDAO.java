@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import dao.UsuarioDAO;
-import entidad.EnlaceBean;
-import entidad.UsuarioBean;
+import entidad.Enlace;
+import entidad.Usuario;
 import util.MySqlDBConexion;
 
 public class MySqlUsuarioDAO implements UsuarioDAO {
@@ -19,11 +19,11 @@ public class MySqlUsuarioDAO implements UsuarioDAO {
 
 	
 	@Override
-	public UsuarioBean login(UsuarioBean bean) throws Exception {
+	public Usuario login(Usuario bean) throws Exception {
 		Connection conn= null;
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
-		UsuarioBean obj = null;
+		Usuario obj = null;
 		try {
 			conn = MySqlDBConexion.getConexion();
 			String sql ="select * from usuario where login = ? and password =? ";
@@ -35,7 +35,7 @@ public class MySqlUsuarioDAO implements UsuarioDAO {
 			
 			rs = pstm.executeQuery();
 			while(rs.next()){
-				obj = new UsuarioBean();
+				obj = new Usuario();
 				obj.setIdUsuario(rs.getString(1));
 				obj.setNombres(rs.getString(2));
 				obj.setApellidos(rs.getString(3));
@@ -59,12 +59,12 @@ public class MySqlUsuarioDAO implements UsuarioDAO {
 	}
 
 	@Override
-	public List<EnlaceBean> traerEnlacesDeUsuario(String idUsuario)	throws Exception {
+	public List<Enlace> traerEnlacesDeUsuario(String idUsuario)	throws Exception {
 		Connection conn= null;
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
-		ArrayList<EnlaceBean> data = new ArrayList<EnlaceBean>();
-		EnlaceBean obj = null;
+		ArrayList<Enlace> data = new ArrayList<Enlace>();
+		Enlace obj = null;
 		
 		try {
 			conn = MySqlDBConexion.getConexion();
@@ -76,7 +76,7 @@ public class MySqlUsuarioDAO implements UsuarioDAO {
 			
 			rs = pstm.executeQuery();
 			while(rs.next()){
-				obj = new EnlaceBean();
+				obj = new Enlace();
 				obj.setIdEnlace(rs.getString(1));
 				obj.setDescripcion(rs.getString(2));
 				obj.setRuta(rs.getString(3));
