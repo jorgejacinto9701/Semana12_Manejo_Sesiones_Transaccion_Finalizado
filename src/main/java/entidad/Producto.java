@@ -7,11 +7,15 @@ public class Producto {
 	private int cantidad;
 	private double precio;
 	private int stock;
+	private double subtotal;
 	
 	public double getSubtotal() {
-		return precio*cantidad;
+		subtotal = precio*cantidad;
+		return subtotal;
 	}
-	
+	public void setSubtotal(double subtotal) {
+		this.subtotal = subtotal;
+	}
 	public int getCantidad() {
 		return cantidad;
 	}

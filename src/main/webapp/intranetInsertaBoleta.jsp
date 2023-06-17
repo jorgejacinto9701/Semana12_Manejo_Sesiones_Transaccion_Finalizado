@@ -87,7 +87,7 @@
 							<div class="form-group">
 								<label class="col-lg-3 control-label" for="id_reg_estado">Cantidad</label>
 								<div class="col-lg-3">
-									<input type="text" name="cantidad" class="form-control"	placeholder="Ingrese la cantidad" onkeypress="return validarSoloNumerosEnteros(event);" />
+									<input type="text" name="cantidad" id="id_cantidad" class="form-control"	placeholder="Ingrese la cantidad" onkeypress="return validarSoloNumerosEnteros(event);" />
 								</div>
 							</div>
 						</div>
@@ -100,13 +100,13 @@
 						<div class="panel-body">
 							<div class="form-group">
 								<div class="col-lg-9 col-lg-offset-3">
-									<button type="submit" id="id_btnAgregar" class="btn btn-primary">AGREGAR</button>
-									<button type="submit" id="id_btnRegistrar"  class="btn btn-primary">REGISTRA BOLETA</button>
+									<button type="button" id="id_btnAgregar" class="btn btn-primary">AGREGAR</button>
+									<button type="button" id="id_btnRegistrar"  class="btn btn-primary">REGISTRA BOLETA</button>
 								</div>
 							</div>
 							<div class="form-group">
 								<div class="col-lg-12">
-									<table id="id_table_boleta" class="table table-striped table-bordered">
+									<table id="id_table" class="table table-striped table-bordered">
 										<thead>
 											<tr>
 												<th>ID</th>
@@ -118,35 +118,8 @@
 											</tr>
 										</thead>
 										<tbody>
-											<c:set var="varSubTotal" value="0" />
 											
-											<c:forEach var="x" items="${sessionScope.dataDeGrilla}">
-												<c:set var="varSubTotal" value="${varSubTotal + x.subtotal}" />               
-											
-												<tr>
-													<td>${x.idProducto}</td>
-													<td>${x.nombre}</td>
-													<td>${x.precio}</td>
-													<td>${x.cantidad}</td>
-													<td>${x.subtotal}</td>
-													<td>
-														<button type='button' class='btn btn-default' 
-																aria-label='Left Align' 
-																onclick="f_elimina_seleccion('${x.idProducto}');" >
-															<span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
-														</button>
-													</td>
-												</tr>
-											</c:forEach>
-											
-											<c:set var="varIGV" value="${0.18*varSubTotal}" />
-											<c:set var="varTotal" value="${varIGV + varSubTotal}" />
 										</tbody>
-										<tfoot>
-												<tr style="text-align: right"><td colspan="6">Total parcial: ${varSubTotal}</td></tr>
-												<tr style="text-align: right"><td colspan="6">IGV: ${varIGV}</td></tr>
-												<tr style="text-align: right"><td colspan="6">Total: ${varTotal}</td></tr>
-										</tfoot>
 									</table>
 								</div>
 							</div>
@@ -327,10 +300,26 @@
 		$("#idBuscaProducto").modal("hide");
 	}
 	
-	//Al pulsar el botón agregar
-	$("#id_btnAgregar").click(function (){
-		$("#id_metodo").val("agregaSeleccion");
-		$("#id_form").submit();
+	$("#id_btnAgregar").click(function() {
+		var id = $("#id_producto_id").val();
+		var nom = $("#id_producto_nombre").val();
+		var pre = $("#id_producto_precio").val();
+		var can = $("#id_cantidad").val();
+        $.ajax({
+	          type: "POST",
+	          url: "boleta", 
+	          data: {"metodo":"agregaSeleccion",
+	        	  	"idProducto":id,
+	        	  	"nombreProducto":nom,
+	        	  	"precio":pre,
+	        	  	"cantidad":can},
+	          success: function(data){
+	        	  agregarGrilla(data.datos);
+	          },
+	          error: function(){
+	        	  mostrarMensaje(MSG_ERROR);
+	          }
+	    });
 	});
 	
 	//Al pulsar el botón registrar
@@ -341,9 +330,19 @@
 	
 	//Al pulsar el botón eliminar
 	function f_elimina_seleccion(id){	
-		$('#id_metodo').val("eliminaSeleccion");
-		$('#id_elimina').val(id);
-		$('#id_form').submit();
+		$.ajax({
+	          type: "POST",
+	          url: "boleta", 
+	          data: {"metodo":"eliminaSeleccion", "id":id},
+	          success: function(data){
+	        	  agregarGrilla(data.datos);
+	        	  mostrarMensaje(data.mensaje);
+	          },
+	          error: function(){
+	        	  mostrarMensaje(MSG_ERROR);
+	          }
+	    });
+
 	}
 	
 	
@@ -354,6 +353,35 @@
 		patron = /[0-9]/;// Solo acepta números
 		te = String.fromCharCode(tecla); // 5
 		return patron.test(te); // 6
+	}
+
+	function agregarGrilla(lista){
+		 $('#id_table').DataTable().clear();
+		 $('#id_table').DataTable().destroy();
+		 $('#id_table').DataTable({
+				data: lista,
+				language: IDIOMA,
+				searching: true,
+				ordering: true,
+				processing: true,
+				pageLength: 10,
+				lengthChange: false,
+				info:true,
+				scrollY: 305,
+		        scroller: {
+		            loadingIndicator: true
+		        },
+				columns:[
+					{data: "idProducto",className:'text-center'},
+					{data: "nombre",className:'text-center'},
+					{data: "precio",className:'text-center'},
+					{data: "cantidad",className:'text-center'},
+					{data: "subtotal",className:'text-center'},
+					{data: function(row, type, val, meta){
+						return '<button type="button" class="btn btn-danger btn-sm"  onClick="f_elimina_seleccion(\'' + row.idProducto +'\');" >Eliminar</button>';
+					},className:'text-center'},
+				]                                     
+		    });
 	}
 	
 </script>

@@ -1,6 +1,7 @@
 package controlador;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -11,10 +12,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.Gson;
+
 import dao.BoletaDao;
 import entidad.Boleta;
 import entidad.DetalleBoleta;
 import entidad.Producto;
+import entidad.Respuesta;
 import entidad.Usuario;
 import fabricas.Fabrica;
 
@@ -82,16 +86,25 @@ public class ServletBoleta extends HttpServlet {
 		
 		//la lista se agrega a sesion
 		session.setAttribute("dataDeGrilla", boleta);
-		request.getRequestDispatcher("/intranetInsertaBoleta.jsp").forward(request, response);	
+		
+		Respuesta objRespuesta = new Respuesta();
+		objRespuesta.setMensaje("Se abgregó el producto >>  " + idProd +" >>> " + nombre);
+		objRespuesta.setDatos(boleta);
+		
+		Gson gson = new Gson();
+		String json = gson.toJson(objRespuesta);
+		response.setContentType("application/json;charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		out.println(json);
+		
+			
 	}
 	
 	@SuppressWarnings("unchecked")
 	protected void eliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.info("En eliminar seleccion");
 		
-		
 		String id = request.getParameter("id");
-		
 		HttpSession session = request.getSession();
 		
 		ArrayList<Producto> boleta = (ArrayList<Producto>)session.getAttribute("dataDeGrilla");
@@ -105,7 +118,16 @@ public class ServletBoleta extends HttpServlet {
 		}
 		//la lista se agrega a sesion
 		session.setAttribute("dataDeGrilla", boleta);
-		request.getRequestDispatcher("/intranetInsertaBoleta.jsp").forward(request, response);
+		
+		Respuesta objRespuesta = new Respuesta();
+		objRespuesta.setMensaje("Se eliminó el producto  " + id);
+		objRespuesta.setDatos(boleta);
+		
+		Gson gson = new Gson();
+		String json = gson.toJson(objRespuesta);
+		response.setContentType("application/json;charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		out.println(json);
 	}
 	
 	@SuppressWarnings("unchecked")
