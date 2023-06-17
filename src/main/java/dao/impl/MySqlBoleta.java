@@ -34,7 +34,7 @@ public class MySqlBoleta implements BoletaDao{
 			conn.setAutoCommit(false);
 			
 			//se crea el sql de la cabecera
-			String sql1 ="insert into boleta values(null,curdate(),?,?)";
+			String sql1 ="insert into boleta values(null,curtime(),?,?)";
 			pstm1 = conn.prepareStatement(sql1);
 			pstm1.setInt(1, boletaBean.getIdCliente());
 			pstm1.setInt(2, boletaBean.getIdUsuario());

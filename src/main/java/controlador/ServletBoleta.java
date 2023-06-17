@@ -134,8 +134,8 @@ public class ServletBoleta extends HttpServlet {
 	protected void registra(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.info("En registra boleta");
 		
-		
 		HttpSession session = request.getSession();
+
 		//Boleta que esta en sesion
 		ArrayList<Producto> boleta = (ArrayList<Producto>)session.getAttribute("dataDeGrilla");
 		
@@ -170,9 +170,18 @@ public class ServletBoleta extends HttpServlet {
 		
 		//limpiamos la sesion
 		session.removeAttribute("dataDeGrilla");
+		boleta.clear();
 		
-		//reenvio
-		request.getRequestDispatcher("/intranetInsertaBoleta.jsp").forward(request, response);
+		Respuesta objRespuesta = new Respuesta();
+		objRespuesta.setMensaje("Se registró la Boleta  ");
+		objRespuesta.setDatos(boleta);
+		
+		Gson gson = new Gson();
+		String json = gson.toJson(objRespuesta);
+		response.setContentType("application/json;charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		out.println(json);
+		
 	}
 
 }

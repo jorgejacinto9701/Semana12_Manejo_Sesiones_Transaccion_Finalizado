@@ -1,4 +1,3 @@
-<%@taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 <jsp:include page="intranetValida.jsp" />
 <!DOCTYPE html>
 <html lang="esS" >
@@ -28,18 +27,20 @@
 <div class="container">
 	<h3>BOLETA - JORGE JACINTO</h3>	
 	
-	<form id="id_form" accept-charset="UTF-8" action="boleta" class="form-horizontal" method="post">
-			<input type="hidden" name="metodo" id="id_metodo"  class="form-control"/>
-			<input type="hidden" name="id" id="id_elimina" class="form-control"/>
+			<input type="hidden" id="id_metodo"  class="form-control"/>
+			<input type="hidden" id="id_elimina" class="form-control"/>
+			<input type="hidden" id="id_cliente_id" class="form-control"/>
+			<input type="hidden" id="id_producto_id" class="form-control"/>
+	
 			<div class="panel-group" id="steps">
 				<div class="panel panel-default">
 					<div class="panel-heading">CLIENTE</div>
 						<div class="panel-body">
+							<form  class="form-horizontal">
 							<div class="form-group">
 									<label class="col-lg-3 control-label">Buscar Cliente</label>
 									<div class="col-lg-5">
 										<button type="button" id="id_btnCliente" data-toggle='modal' class='btn btn-success' >....</button>
-										<input type="hidden" name="idCliente" id="id_cliente_id" class="form-control"/>
 									</div>
 							</div>
 							<div class="form-group">
@@ -54,16 +55,17 @@
 									<input type="text"id="id_cliente_nombre"  class="form-control"	readonly="readonly"/>
 								</div>
 							</div>
+							</form>
 					</div>
 				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading">PRODUCTO</div>
 						<div class="panel-body">
+							<form  class="form-horizontal">
 							<div class="form-group">
 								<label class="col-lg-3 control-label">Buscar Producto</label>
 								<div class="col-lg-5">
 									<button type="button" id="id_btnProducto" data-toggle='modal' class='btn btn-success' >....</button>
-									<input type="hidden" name="idProducto" id="id_producto_id" class="form-control"/>									
 								</div>
 							</div>
 							<div class="form-group">
@@ -90,6 +92,7 @@
 									<input type="text" name="cantidad" id="id_cantidad" class="form-control"	placeholder="Ingrese la cantidad" onkeypress="return validarSoloNumerosEnteros(event);" />
 								</div>
 							</div>
+							</form>
 						</div>
 				</div>
 			</div>
@@ -113,7 +116,6 @@
 												<th>Nombre</th>
 												<th>Precio</th>
 												<th>Cantidad</th>
-												<th>Subtotal</th>
 												<th></th>
 											</tr>
 										</thead>
@@ -130,7 +132,7 @@
 <!-- El formulario de busqueda de Cliente (Modal) -->
 
   	 <div class="modal fade" id="idBuscaCliente" >
-			<div class="modal-dialog" style="width: 60%">
+			<div class="modal-dialog" style="width: 60%; height: 60%">
 
 				<div class="modal-content">
 				<div class="modal-header" style="padding: 35px 50px">
@@ -140,6 +142,7 @@
 				<div class="modal-body" style="padding: 20px 10px;">
 						    <div class="panel-group" id="steps">
 		                        <div class="panel panel-default">
+		                        			<form  class="form-horizontal">
 											<div class="form-group">
 													<label class="col-lg-3 control-label">
 														Cliente 
@@ -165,6 +168,7 @@
 												</table>
 												</div>
 											</div>
+											</form>
 			                        </div>
 		                    </div>
 					</div>
@@ -185,6 +189,7 @@
 				<div class="modal-body" style="padding: 20px 10px;">
 						    <div class="panel-group" id="steps">
 		                        <div class="panel panel-default">
+		                        		<form  class="form-horizontal">
 											<div class="form-group">
 													<label class="col-lg-3 control-label">
 														Producto 
@@ -202,7 +207,6 @@
 																<th style="width: 45%">Nombre</th>
 																<th style="width: 15%">Precio</th>
 																<th style="width: 15%">Stock</th>
-																<th style="width: 10%"></th>
 															</tr>
 														</thead>
 														<tbody>
@@ -211,13 +215,13 @@
 												</table>
 												</div>
 											</div>
+										</form>	
 		                        </div>
 		                    </div>
 				</div>
 			</div>
 			</div>
 		</div>
-</form>
 </div>
 <script type="text/javascript">
 	
@@ -315,17 +319,28 @@
 	        	  	"cantidad":can},
 	          success: function(data){
 	        	  agregarGrilla(data.datos);
+	        	  mostrarMensaje(data.mensaje);
 	          },
 	          error: function(){
 	        	  mostrarMensaje(MSG_ERROR);
 	          }
 	    });
 	});
-	
-	//Al pulsar el botón registrar
-	$("#id_btnRegistrar").click(function (){
-		$("#id_metodo").val("registraBoleta");
-		$("#id_form").submit();
+
+	$("#id_btnRegistrar").click(function() {
+		var id = $("#id_cliente_id").val();
+        $.ajax({
+	          type: "POST",
+	          url: "boleta", 
+	          data: {"metodo":"registraBoleta", "idCliente":id},
+	          success: function(data){
+	        	  agregarGrilla(data.datos);
+	        	  mostrarMensaje(data.mensaje);
+	          },
+	          error: function(){
+	        	  mostrarMensaje(MSG_ERROR);
+	          }
+	    });
 	});
 	
 	//Al pulsar el botón eliminar
@@ -376,7 +391,6 @@
 					{data: "nombre",className:'text-center'},
 					{data: "precio",className:'text-center'},
 					{data: "cantidad",className:'text-center'},
-					{data: "subtotal",className:'text-center'},
 					{data: function(row, type, val, meta){
 						return '<button type="button" class="btn btn-danger btn-sm"  onClick="f_elimina_seleccion(\'' + row.idProducto +'\');" >Eliminar</button>';
 					},className:'text-center'},
