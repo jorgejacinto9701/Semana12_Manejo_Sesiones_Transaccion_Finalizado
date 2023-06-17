@@ -245,15 +245,8 @@
 		
 		//Se añade los clientes a la tabla
 		$.getJSON("buscaCliente",{"filtro":var_cliente}, function (data){
-				$.each(data, function(index, item){
-					$('#id_table_cliente').append("<tr>"+
-							"<td>" +item.idCliente + "</td>" +
-							"<td>" +item.nombre + "</td>" +
-							"<td>" +item.apellido + "</td>" +
-							"<td><button type='button' class='btn btn-default' aria-label='Left Align' onclick=\"f_seleccione_cliente('"+ item.idCliente+"','"+ item.nombre+"','"+ item.apellido +"');\" ><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button></td>"+
-							+"</tr>");
-				});
-			});
+				
+		});
 		
 	});
 	
@@ -268,16 +261,8 @@
 		
 		//Se añade los clientes a la tabla
 		$.getJSON("buscaProducto",{"filtro":var_producto}, function (data){
-				$.each(data, function(index, item){
-					$('#id_table_producto').append("<tr>"+
-							"<td>" +item.idProducto + "</td>" +
-							"<td>" +item.nombre + "</td>" +
-							"<td>" +item.precio + "</td>" +
-							"<td>" +item.stock + "</td>" +
-							"<td><button type='button' class='btn btn-default' aria-label='Left Align' onclick=\"f_seleccione_producto('"+ item.idProducto+"','"+ item.nombre+"','"+ item.precio+"','"+ item.stock+"');\" ><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button></td>"+
-							+"</tr>");
-				});
-			});
+				
+		});
 		
 	});
 	
@@ -309,54 +294,17 @@
 		var nom = $("#id_producto_nombre").val();
 		var pre = $("#id_producto_precio").val();
 		var can = $("#id_cantidad").val();
-        $.ajax({
-	          type: "POST",
-	          url: "boleta", 
-	          data: {"metodo":"agregaSeleccion",
-	        	  	"idProducto":id,
-	        	  	"nombreProducto":nom,
-	        	  	"precio":pre,
-	        	  	"cantidad":can},
-	          success: function(data){
-	        	  agregarGrilla(data.datos);
-	        	  mostrarMensaje(data.mensaje);
-	          },
-	          error: function(){
-	        	  mostrarMensaje(MSG_ERROR);
-	          }
-	    });
+        
 	});
 
 	$("#id_btnRegistrar").click(function() {
 		var id = $("#id_cliente_id").val();
-        $.ajax({
-	          type: "POST",
-	          url: "boleta", 
-	          data: {"metodo":"registraBoleta", "idCliente":id},
-	          success: function(data){
-	        	  agregarGrilla(data.datos);
-	        	  mostrarMensaje(data.mensaje);
-	          },
-	          error: function(){
-	        	  mostrarMensaje(MSG_ERROR);
-	          }
-	    });
+        
 	});
 	
 	//Al pulsar el botón eliminar
 	function f_elimina_seleccion(id){	
-		$.ajax({
-	          type: "POST",
-	          url: "boleta", 
-	          data: {"metodo":"eliminaSeleccion", "id":id},
-	          success: function(data){
-	        	  agregarGrilla(data.datos);
-	        	  mostrarMensaje(data.mensaje);
-	          },
-	          error: function(){
-	        	  mostrarMensaje(MSG_ERROR);
-	          }
-	    });
+		
 
 	}
 	
