@@ -259,7 +259,8 @@
 	//Al escribir en la caja de texto del cliente
 	$("#id_txtCliente").keyup( function (e){
 		var var_cliente = $("#id_txtCliente").val();
-
+		console.log(">> " + var_cliente);
+		
 		//limpiar la tabla
 		$("#id_table_cliente tbody").remove();
 		
@@ -276,7 +277,8 @@
 	//Al escribir en la caja de texto del cliente
 	$("#id_txtProducto").keyup( function (e){
 		var var_producto = $("#id_txtProducto").val();
-
+		console.log(">> " + var_producto);
+		
 		//limpiar la tabla
 		$("#id_table_producto tbody").remove();
 		
