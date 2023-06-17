@@ -2,6 +2,7 @@ package controlador;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,6 +21,8 @@ import fabricas.Fabrica;
 public class ServletLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	private static Logger log = Logger.getLogger(ServletLogin.class.getName());
+	
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			
 		String user = request.getParameter("loginuser");
@@ -42,10 +45,14 @@ public class ServletLogin extends HttpServlet {
 				request.getRequestDispatcher("/login.jsp").forward(request, response);
 				
 			}else{
-				//Acceder a la sessi�n
+				//Acceder a la session
 				HttpSession session = request.getSession();
 				
-				//Se guarda en sesi�n los datos de usuario
+				//Se imprime la ID de la session
+				String id =  session.getId();
+				log.info(">>> ID session >> " + id);
+				
+				//Se guarda en sesion los datos de usuario
 				//La session es un objeto que dura un determinado tiempo en el servidor
 				session.setAttribute("objUsuario", usuario);
 				
