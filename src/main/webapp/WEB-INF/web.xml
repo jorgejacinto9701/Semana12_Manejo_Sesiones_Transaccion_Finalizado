@@ -7,9 +7,10 @@
 
 
 	<!-- Tiempo de la sesión (minutos) -->
-	<!-- el -1 significa un tiempo indefinido -->
+	<!-- El -1 significa un tiempo indefinido -->
+	<!-- Tiempo aproximado -->
 	<session-config>
-		<session-timeout>2</session-timeout>
+		<session-timeout>1</session-timeout>
 	</session-config>
 
 </web-app>
