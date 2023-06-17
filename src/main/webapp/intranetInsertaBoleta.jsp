@@ -207,6 +207,7 @@
 																<th style="width: 45%">Nombre</th>
 																<th style="width: 15%">Precio</th>
 																<th style="width: 15%">Stock</th>
+																<th style="width: 10%"></th>
 															</tr>
 														</thead>
 														<tbody>
@@ -224,7 +225,6 @@
 		</div>
 </div>
 <script type="text/javascript">
-	
 	//Al pulsar el botón cliente
 	$("#id_btnCliente").click(function (){
 		$("#idBuscaCliente").modal("show");
@@ -240,32 +240,21 @@
 		var var_cliente = $("#id_txtCliente").val();
 		console.log(">> " + var_cliente);
 		
-		//limpiar la tabla
-		$("#id_table_cliente tbody").remove();
-		
-		//Se añade los clientes a la tabla
 		$.getJSON("buscaCliente",{"filtro":var_cliente}, function (data){
-				
+			agregarCliente(data);	
 		});
-		
 	});
-	
 	
 	//Al escribir en la caja de texto del cliente
 	$("#id_txtProducto").keyup( function (e){
 		var var_producto = $("#id_txtProducto").val();
 		console.log(">> " + var_producto);
 		
-		//limpiar la tabla
-		$("#id_table_producto tbody").remove();
-		
 		//Se añade los clientes a la tabla
 		$.getJSON("buscaProducto",{"filtro":var_producto}, function (data){
-				
+			agregarProducto(data);	
 		});
-		
 	});
-	
 	
 	//Se anula el enter
 	$(document).on("keypress", "form", function(event) { 
@@ -289,25 +278,89 @@
 		$("#idBuscaProducto").modal("hide");
 	}
 	
+	function limpiar_todo(){
+		$("#id_cliente_id").val("");
+		$("#id_cliente_nombre").val("");
+		$("#id_cliente_apellido").val("");
+		$("#id_producto_id").val("");
+		$("#id_producto_nombre").val("");
+		$("#id_producto_precio").val("");
+		$("#id_producto_stock").val("");
+		$("#id_cantidad").val("");
+	}
+	
+	function limpiar_producto(){
+		$("#id_producto_id").val("");
+		$("#id_producto_nombre").val("");
+		$("#id_producto_precio").val("");
+		$("#id_producto_stock").val("");		
+		$("#id_cantidad").val("");
+	}
+	
 	$("#id_btnAgregar").click(function() {
 		var id = $("#id_producto_id").val();
 		var nom = $("#id_producto_nombre").val();
 		var pre = $("#id_producto_precio").val();
+		var stock = $("#id_producto_stock").val();
 		var can = $("#id_cantidad").val();
-        
+		if (can == ''){
+			 mostrarMensaje("Ingrese una cantidad");
+			 return;
+		}
+		console.log(">> cant " + can);
+		console.log(">> stock " + stock);
+		if (can > stock){
+			 mostrarMensaje("Ingrese una cantidad menor o igual al stock " + stock);
+			 return;
+		}
+        $.ajax({
+	          type: "POST",
+	          url: "boleta", 
+	          data: {"metodo":"agregaSeleccion","idProducto":id,
+	        	  	 "nombreProducto":nom, "precio":pre,"cantidad":can},
+	          success: function(data){
+	        	  agregarGrilla(data.datos);
+	        	  mostrarMensaje(data.mensaje);
+	        	  limpiar_producto();
+	          },
+	          error: function(){
+	        	  mostrarMensaje(MSG_ERROR);
+	          }
+	    });
 	});
 
 	$("#id_btnRegistrar").click(function() {
 		var id = $("#id_cliente_id").val();
-        
+		$.ajax({
+	          type: "POST",
+	          url: "boleta", 
+	          data: {"metodo":"registraBoleta","idCliente":id},
+	          success: function(data){
+	        	  agregarGrilla(data.datos);
+	        	  mostrarMensaje(data.mensaje);
+	        	  limpiar_todo();
+	          },
+	          error: function(){
+	        	  mostrarMensaje(MSG_ERROR);
+	          }
+	    });
 	});
 	
 	//Al pulsar el botón eliminar
 	function f_elimina_seleccion(id){	
-		
-
+		$.ajax({
+	          type: "POST",
+	          url: "boleta", 
+	          data: {"metodo":"eliminaSeleccion","id":id},
+	          success: function(data){
+	        	  agregarGrilla(data.datos);
+	        	  mostrarMensaje(data.mensaje);
+	          },
+	          error: function(){
+	        	  mostrarMensaje(MSG_ERROR);
+	          }
+	    });
 	}
-	
 	
 	//Solo numeros en caja de texto
 	function validarSoloNumerosEnteros(e) { // 1
@@ -341,6 +394,61 @@
 					{data: "cantidad",className:'text-center'},
 					{data: function(row, type, val, meta){
 						return '<button type="button" class="btn btn-danger btn-sm"  onClick="f_elimina_seleccion(\'' + row.idProducto +'\');" >Eliminar</button>';
+					},className:'text-center'},
+				]                                     
+		    });
+	}
+	
+	function agregarCliente(lista){
+		 $('#id_table_cliente').DataTable().clear();
+		 $('#id_table_cliente').DataTable().destroy();
+		 $('#id_table_cliente').DataTable({
+				data: lista,
+				language: IDIOMA,
+				searching: false,
+				ordering: true,
+				processing: true,
+				pageLength: 10,
+				lengthChange: false,
+				info:true,
+				scrollY: 305,
+		        scroller: {
+		            loadingIndicator: true
+		        },
+				columns:[
+					{data: "idCliente",className:'text-center'},
+					{data: "nombre",className:'text-center'},
+					{data: "apellido",className:'text-center'},
+					{data: function(row, type, val, meta){
+						return '<button type="button" class="btn btn-info btn-sm" onClick="f_seleccione_cliente(\'' + row.idCliente + '\',\'' +  row.nombre   + '\',\'' +  row.apellido  +'\')" >Seleccione</button>';
+					},className:'text-center'},
+				]                                     
+		    });
+	}
+	
+	function agregarProducto(lista){
+		 $('#id_table_producto').DataTable().clear();
+		 $('#id_table_producto').DataTable().destroy();
+		 $('#id_table_producto').DataTable({
+				data: lista,
+				language: IDIOMA,
+				searching: false,
+				ordering: true,
+				processing: true,
+				pageLength: 10,
+				lengthChange: false,
+				info:true,
+				scrollY: 305,
+		        scroller: {
+		            loadingIndicator: true
+		        },
+				columns:[
+					{data: "idProducto",className:'text-center'},
+					{data: "nombre",className:'text-center'},
+					{data: "precio",className:'text-center'},
+					{data: "stock",className:'text-center'},
+					{data: function(row, type, val, meta){
+						return '<button type="button" class="btn btn-info btn-sm" onClick="f_seleccione_producto(\'' + row.idProducto + '\',\'' +  row.nombre   + '\',\'' +  row.precio + '\',\'' +  row.stock  +'\')" >Seleccione</button>';
 					},className:'text-center'},
 				]                                     
 		    });

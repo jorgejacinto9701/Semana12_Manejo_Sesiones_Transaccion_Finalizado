@@ -19,6 +19,7 @@ import entidad.Boleta;
 import entidad.DetalleBoleta;
 import entidad.Producto;
 import entidad.Respuesta;
+import entidad.Usuario;
 import fabricas.Fabrica;
 
 @WebServlet("/boleta")
@@ -142,9 +143,13 @@ public class ServletBoleta extends HttpServlet {
 		String cliente = request.getParameter("idCliente");
 		int idCliente = Integer.parseInt(cliente);
 		
+		//Usuario
+		Usuario objusuario = (Usuario) session.getAttribute("objUsuario");
+		
 		//Creamos la Boleta
 		Boleta b = new Boleta();
 		b.setIdCliente(idCliente);
+		b.setIdUsuario(Integer.parseInt(objusuario.getIdUsuario()));
 		
 		//Creamos el detalle
 		ArrayList<DetalleBoleta> detalles = new ArrayList<DetalleBoleta>();

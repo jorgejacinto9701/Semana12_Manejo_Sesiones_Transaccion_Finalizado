@@ -145,8 +145,8 @@ public class MySqlBoleta implements BoletaDao{
 		try {
 			conn = MySqlDBConexion.getConexion();
 			String sql ="select * from producto  where nombre like ? ";
-				pstm = conn.prepareStatement(sql);
-				pstm.setString(1, (filtro+"%"));
+			pstm = conn.prepareStatement(sql);
+			pstm.setString(1, filtro);
 		
 			log.info("---> SQL -> " + pstm);
 			ResultSet rs = pstm.executeQuery();
