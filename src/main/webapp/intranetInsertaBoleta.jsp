@@ -310,7 +310,7 @@
 		console.log(">> cant " + can);
 		console.log(">> stock " + stock);
 		console.log(">> comparacion " + (parseInt(can) > parseInt(stock)));
-		if ((parseInt(can) > parseInt(stock)){
+		if (parseInt(can) > parseInt(stock)){
 			 mostrarMensaje("Ingrese una cantidad menor o igual al stock " + stock);
 			 return;
 		}
